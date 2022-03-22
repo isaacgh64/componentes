@@ -1,5 +1,9 @@
-import 'package:componentes/src/providers/menu_provider.dart';
 import 'package:flutter/material.dart';
+
+import 'package:componentes/src/utils/icono_string_util.dart';
+import 'package:componentes/src/pages/alert_pages.dart';
+import 'package:componentes/src/providers/menu_provider.dart';
+import 'package:componentes/src/pages/avatar_page.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -19,20 +23,23 @@ class HomePage extends StatelessWidget {
       future: menuProvider.cargarData(),
       builder: (BuildContext context, AsyncSnapshot<List<dynamic>> snapshot) {
         return ListView(
-          children: _listaItems(snapshot.data ?? []),
+          children: _listaItems(snapshot.data ?? [], context),
         );
       },
     );
   }
 
-  List<Widget> _listaItems(List<dynamic> data) {
+  List<Widget> _listaItems(List<dynamic> data, BuildContext context) {
     final List<Widget> opciones = [];
-    // ignore: avoid_function_literals_in_foreach_calls
+
     data.forEach((opt) {
       final widgetTemp = ListTile(
         title: Text(opt['texto']),
-        leading: const Icon(Icons.access_alarm, color: Colors.blue),
+        leading: getIcon(opt['icon']),
         trailing: const Icon(Icons.keyboard_arrow_right, color: Colors.blue),
+        onTap: () {
+          Navigator.pushNamed(context, opt['ruta']);
+        },
       );
       opciones
         ..add(widgetTemp)
